@@ -1,0 +1,42 @@
+[package]
+name = "{{project-name}}"
+version = "0.1.0"
+edition = "2021"
+authors = ["{{authors}}"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+# configure binary. this also let's you use cargo fix.
+[[bin]]
+name = "{{crate_name}}"
+test = false
+bench = false
+
+
+[profile.release]
+lto = true                 # Link-time-optimizations for further size reduction
+debug = true               # debug symbols are nice and apperantly do not increase the file size
+opt-level = 's'            # optimize for size. We only have 64kB
+codegen-units = 1          # More code generation units allows more of a crate to be processed in parallel possibly reducing compile time, but may produce slower code
+
+
+[profile.dev]
+lto = false
+debug = true
+opt-level = 1
+codegen-units = 16
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# Requiered Libraries
+cortex-m = "^0.7.4"                           # Base lib for cortex-chips
+panic-halt = "^0.2.0"                         # Panic behaviour, see https://crates.io/keywords/panic-impl for alternatives
+cortex-m-rt = "^0.7.1"                        # Base lib for cortex-chips
+embedded-hal = "^0.2.7"                       # hardware abstraction layer
+nb = "1.0.0"                                  # Minimal and reusable non-blocking I/O layer
+
+[dependencies.stm32f1xx-hal]
+version = "^0.9.0"
+features = ["rt", "stm32f103", "medium"]
